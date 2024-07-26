@@ -3,6 +3,7 @@ package com.lyw.springcloudstarter.utils;
 import cn.hutool.core.io.FileUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,10 @@ public class JavaCompilerUtils {
 
     static String templateDir = "templates";
 
+    private static final String SECURITY_MANAGER_PATH = "D:\\github\\java\\spring-cloud-sandbox\\src\\main\\resources\\security-manager";
+    private static final String SECURITY_MANAGER_CLASS = "MySecurityManager";
+
+    private static final String ENCODE_COMMAND = "-encoding UTF-8";
     public static void main(String[] args) throws ClassNotFoundException, MalformedURLException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException {
 
         String sourceCode = "public class Main {\n" +
@@ -48,6 +53,7 @@ public class JavaCompilerUtils {
     public static CompilerResult<String> compiler(String sourceCode) {
         // 写入文件
         String classFilePath = rewriteToTemplate(sourceCode);
+        String path = classFilePath.substring(0, classFilePath.lastIndexOf(File.separator));
 
         // 编译
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -56,10 +62,10 @@ public class JavaCompilerUtils {
         result = compiler.run(null, null, byteArrayOutputStream, classFilePath);
         FileUtil.del(classFilePath);
         if (result == 0) {
-            return new CompilerResult<>(true, "java -cp " + classFilePath.substring(0, classFilePath.lastIndexOf(File.separator)) + " Main ", null);
+            return new CompilerResult<>(true, String.format("java -Dfile.encoding=UTF-8 -cp %s;%s -Djava.security.manager=%s Main ", path, SECURITY_MANAGER_PATH, SECURITY_MANAGER_CLASS), null, path);
 
         } else {
-            return new CompilerResult<>(false, null, byteArrayOutputStream.toString());
+            return new CompilerResult<>(false, null, byteArrayOutputStream.toString(), path);
         }
     }
 
@@ -91,12 +97,12 @@ public class JavaCompilerUtils {
             Method method = main.getMethod("main", String[].class);
             // 删除文件
             FileUtil.del(filePath);
-            return new CompilerResult<>(true, new InvokeContext(main, o, method), null);
+            return new CompilerResult<>(true, new InvokeContext(main, o, method), null, path);
 
         } else {
             FileUtil.del(filePath);
 
-            new CompilerResult<>(false, null, byteArrayOutputStream.toString());
+            new CompilerResult<>(false, null, byteArrayOutputStream.toString(), path);
 
             throw new RuntimeException("compile error");
         }
@@ -104,6 +110,11 @@ public class JavaCompilerUtils {
 
 
     private static String rewriteToTemplate(String sourceCode) {
+        // 如果文件夹不存在则创建
+        if (!FileUtil.exist(JavaCompilerUtils.class.getClassLoader().getResource("").getPath() + File.separator + templateDir)) {
+            FileUtil.mkdir(JavaCompilerUtils.class.getClassLoader().getResource("").getPath() + File.separator + templateDir);
+        }
+
         String path = Objects.requireNonNull(JavaCompilerUtils.class.getClassLoader().getResource(templateDir)).getPath();
         String subPath = String.valueOf(System.currentTimeMillis());
         File mkdir = FileUtil.mkdir(path + File.separator + subPath);
@@ -120,11 +131,15 @@ public class JavaCompilerUtils {
         @Getter
         private final String compileMessage;
 
+        @Getter
+        private final String compilerPath;
 
-        private CompilerResult(Boolean success, T data, String compileMessage) {
+
+        private CompilerResult(Boolean success, T data, String compileMessage, String compilerPath) {
             this.success = success;
             this.data = data;
             this.compileMessage = compileMessage;
+            this.compilerPath = compilerPath;
         }
 
         public boolean isSuccess() {

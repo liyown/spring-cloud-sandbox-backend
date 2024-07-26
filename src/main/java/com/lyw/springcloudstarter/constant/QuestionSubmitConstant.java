@@ -25,6 +25,9 @@ public interface QuestionSubmitConstant {
     String JUDGE_RESULT_SYSTEM_ERROR = "System Error";
     String JUDGE_RESULT_COMPILE_ERROR = "Compile Error";
 
+    // 禁止操作
+    String JUDGE_RESULT_FORBIDDEN_OPERATION = "Forbidden Operation";
+
     // 语言
     @Getter
     enum Language {

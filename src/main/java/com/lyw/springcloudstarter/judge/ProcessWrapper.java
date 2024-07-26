@@ -1,5 +1,6 @@
 package com.lyw.springcloudstarter.judge;
 
+import cn.hutool.core.io.FileUtil;
 import com.lyw.springcloudstarter.constant.QuestionSubmitConstant;
 import com.lyw.springcloudstarter.domain.dto.codesandbox.CodeRunResult;
 import com.lyw.springcloudstarter.utils.JavaCompilerUtils;
@@ -21,11 +22,19 @@ public class ProcessWrapper {
 
     private final StopWatch stopWatch = new StopWatch();
 
+
+
     // JVM限制 最大内存和栈大小
     String jvmLimitCommand = "-Xmx24m -Xss256k";
 
     public CodeRunResult<List<String>> runCode(String code, List<String> input) {
+
         CodeRunResult<List<String>> runResult = new CodeRunResult<>();
+        if (input == null || input.isEmpty()) {
+            runResult.setStatus(CodeRunResult.Status.RUNTIME_ERROR.ordinal());
+            runResult.setMessage(QuestionSubmitConstant.JUDGE_RESULT_SYSTEM_ERROR + " " + "input is empty");
+            return runResult;
+        }
 
         JavaCompilerUtils.CompilerResult<String> compilerResult = JavaCompilerUtils.compiler(code);
         log.info("compiler result: {}", compilerResult.getData());
@@ -55,6 +64,8 @@ public class ProcessWrapper {
             runResult.setStatus(CodeRunResult.Status.COMPILE_ERROR.ordinal());
             runResult.setMessage(QuestionSubmitConstant.JUDGE_RESULT_COMPILE_ERROR + " " + compilerResult.getCompileMessage());
         }
+        // 删除文件
+        FileUtil.del(compilerResult.getCompilerPath());
         return runResult;
     }
 
@@ -121,6 +132,10 @@ public class ProcessWrapper {
                     // 栈限制
                     runResult.setStatus(CodeRunResult.Status.STACK_LIMIT_ERROR.ordinal());
                     runResult.setMessage(QuestionSubmitConstant.JUDGE_RESULT_MEMORY_LIMIT_EXCEEDED);
+                } else if (s.contains("java.lang.SecurityException")) {
+                    // 安全限制
+                    runResult.setStatus(CodeRunResult.Status.FORBIDDEN.ordinal());
+                    runResult.setMessage(QuestionSubmitConstant.JUDGE_RESULT_FORBIDDEN_OPERATION + " " + s);
                 } else {
                     // 运行错误
                     runResult.setStatus(CodeRunResult.Status.RUNTIME_ERROR.ordinal());
