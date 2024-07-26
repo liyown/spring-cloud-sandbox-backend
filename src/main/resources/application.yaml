@@ -1,0 +1,121 @@
+server:
+  port: 8088
+
+
+spring:
+  application:
+    name: spring-cloud-starter
+  profiles:
+    active: dev
+  #  nacos 是否导入外部配置文件
+  config:
+    import:
+      # nacos配置中心的配置文件
+#      - nacos:shared_seata_config.yaml?preference=remote
+
+  datasource:
+    url: jdbc:mysql://${my.db.host}:3300/my_db?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: ${my.db.username}
+    password: ${my.db.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+  cloud:
+    #  nacos配置
+#    nacos:
+#      # nacos服务发现地址 discoveryClient
+#      discovery:
+#        server-addr: 192.168.208.128:8848
+#      # nacos配置中心地址 configServer
+#      config:
+#        server-addr: 192.168.208.128:8848
+#        namespace: 9194952e-02a9-4737-89c2-1f3dee3317f0
+#        group: SEATA_GROUP
+#        file-extension: yaml
+
+    #  openfeign配置 开启okhttp
+    openfeign:
+      okhttp:
+        enabled: true
+
+
+    #  sentinel配置 后台监控
+    sentinel:
+      http-method-specify: true
+#      transport:
+#        dashboard: localhost:8089
+      log:
+        dir: "logs/sentinel"
+        switch-pid: true
+
+
+
+    #      sentinel datasource配置 与com.lyw.springcloudstarter.config.SentinelConfig二选一
+#      datasource:
+#        db1:
+#          nacos:
+#            server-addr: 192.168.208.128:8848
+#            namespace: 9194952e-02a9-4737-89c2-1f3dee3317f0
+#            group-id: DefaultGroup
+#            data-id: sentinel-datasource.json
+#            data-type: json
+#            rule-type: flow
+
+
+
+
+
+    #seata:
+    #  registry:
+    #    nacos:
+    #      server-addr: 192.168.208.128:8848
+    #      namespace: 9194952e-02a9-4737-89c2-1f3dee3317f0
+    #      group: SEATA_GROUP
+    #      application: seata-server
+    #      username: liuyaowen
+    #      password: 123123
+    #  tx-service-group: hmall
+    #  service:
+    #    vgroup-mapping:
+    #      hmall: default
+
+
+
+# 开启OpenFeign的限流配置
+feign:
+  sentinel:
+    enabled: true
+
+
+# MybatisPlus配置
+mybatis-plus:
+  configuration:
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+  global-config:
+    db-config:
+      update-strategy: not_null
+      id-type: auto
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.lyw.springbootstarter.domain
+
+logging:
+  level:
+    com.example.demo: debug
+  pattern:
+    dateformat: HH:mm:ss:SSS
+  file:
+    path: "logs/logging-face"
+
+
+knife4j:
+  enable: true
+  openapi:
+    title: 项目初始化接口文档
+    description: "项目初始化接口文档"
+    version: v1.0.0
+    group:
+      default:
+        group-name: default
+        api-rule: package
+        api-rule-resources:
+          - com.lyw.springcloudstarter.controller

@@ -1,0 +1,34 @@
+[
+  {
+    "resource": "abc",
+    "controlBehavior": 0,
+    "count": 20.0,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0
+  },
+  {
+    "resource": "abc1",
+    "controlBehavior": 0,
+    "count": 20.0,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0
+  },
+  {
+    "resource": "test",
+    "controlBehavior": 0,
+    "count": 20.0,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0
+  },
+  {
+    "resource": "execute",
+    "controlBehavior": 0,
+    "count": 5.0,
+    "grade": 1,
+    "limitApp": "default",
+    "strategy": 0
+  }
+]

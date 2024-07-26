@@ -1,0 +1,5 @@
+my:
+  db:
+    host: 106.53.217.225 # 修改为你自己的虚拟机IP地址
+    password: mysql_lyw # 修改为docker中的MySQL密码
+    username: root
