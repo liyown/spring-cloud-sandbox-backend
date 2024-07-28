@@ -57,15 +57,19 @@ public class JavaCompilerUtils {
 
         // 编译
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream errorByteArrayOutputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream infoByteArrayOutputStream = new ByteArrayOutputStream();
         int result;
-        result = compiler.run(null, null, byteArrayOutputStream, classFilePath);
+        result = compiler.run(null, null, errorByteArrayOutputStream, classFilePath);
         FileUtil.del(classFilePath);
         if (result == 0) {
+            log.info("编译成功");
             return new CompilerResult<>(true, String.format("java -Dfile.encoding=UTF-8 -cp %s;%s -Djava.security.manager=%s Main ", path, SECURITY_MANAGER_PATH, SECURITY_MANAGER_CLASS), null, path);
 
         } else {
-            return new CompilerResult<>(false, null, byteArrayOutputStream.toString(), path);
+            log.error("编译失败");
+            String failMessage = errorByteArrayOutputStream.toString() + " " + infoByteArrayOutputStream.toString();
+            return new CompilerResult<>(false, null, failMessage, path);
         }
     }
 

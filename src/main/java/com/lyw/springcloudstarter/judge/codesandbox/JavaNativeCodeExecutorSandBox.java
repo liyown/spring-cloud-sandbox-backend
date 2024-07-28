@@ -1,14 +1,10 @@
 package com.lyw.springcloudstarter.judge.codesandbox;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.dfa.WordTree;
 import com.lyw.springcloudstarter.domain.dto.codesandbox.CodeRunResult;
-import com.lyw.springcloudstarter.judge.ProcessWrapper;
 
 import java.nio.charset.Charset;
 import java.util.List;
-
-import static com.lyw.springcloudstarter.constant.QuestionSubmitConstant.JUDGE_RESULT_FORBIDDEN_OPERATION;
 
 /**
  * @author: liuyaowen

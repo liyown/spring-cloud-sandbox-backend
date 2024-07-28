@@ -41,12 +41,14 @@ spring:
 
     #  sentinel配置 后台监控
     sentinel:
+      enabled: true
       http-method-specify: true
 #      transport:
 #        dashboard: localhost:8089
       log:
-        dir: "logs/sentinel"
+        dir: logs/sentinel
         switch-pid: true
+
 
 
 
