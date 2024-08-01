@@ -21,6 +21,7 @@ public interface QuestionSubmitConstant {
     String JUDGE_RESULT_WRONG_ANSWER = "Wrong Answer";
     String JUDGE_RESULT_TIME_LIMIT_EXCEEDED = "Time Limit Exceeded";
     String JUDGE_RESULT_MEMORY_LIMIT_EXCEEDED = "Memory Limit Exceeded";
+    String JUDGE_RESULT_STACK_LIMIT_EXCEEDED = "Stack Limit Exceeded";
     String JUDGE_RESULT_RUNTIME_ERROR = "Runtime Error";
     String JUDGE_RESULT_SYSTEM_ERROR = "System Error";
     String JUDGE_RESULT_COMPILE_ERROR = "Compile Error";

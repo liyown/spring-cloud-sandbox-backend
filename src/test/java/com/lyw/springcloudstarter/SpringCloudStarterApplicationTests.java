@@ -1,24 +1,18 @@
 package com.lyw.springcloudstarter;
 
-import com.lyw.springcloudstarter.common.MySecurityMananger;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.api.model.PullResponseItem;
+import com.github.dockerjava.core.DockerClientBuilder;
+import com.github.dockerjava.netty.NettyDockerCmdExecFactory;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.StopWatch;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.Scanner;
+
 
 //@SpringBootTest
 class SpringCloudStarterApplicationTests {
-
-    @Test
-    void contextLoads() throws IOException {
-//        System.setSecurityManager(new MySecurityMananger());
-
-        FileInputStream fileInputStream = new FileInputStream("D:\\github\\java\\spring-cloud-sandbox\\src\\main\\resources\\security-manager\\MySecurityMananger.class");
-        byte[] bytes = new byte[1024];
-        int read = fileInputStream.read(bytes);
-        System.out.println(new String(bytes, 0, read, "UTF-8"));
-
-    }
 
 }

@@ -3,8 +3,11 @@ package com.lyw.springcloudstarter.judge.codesandbox;
 
 import com.lyw.springcloudstarter.domain.dto.codesandbox.CodeRunResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -16,17 +19,35 @@ import java.util.List;
 @Slf4j
 public class DelegateCodeExecutorSandbox implements ICodeExecuteSandBox{
 
-    private final ICodeExecuteSandBox codeExecuteSandBox;
+    @Value("${code-sandbox.type}")
+    private String codeSandboxType;
 
-    public DelegateCodeExecutorSandbox(ICodeExecuteSandBox codeExecuteSandBox) {
-        this.codeExecuteSandBox = codeExecuteSandBox;
+    private final Map<String, ICodeExecuteSandBox> codeSanBoxMap = new HashMap<String, ICodeExecuteSandBox>();
+
+    public DelegateCodeExecutorSandbox(List<ICodeExecuteSandBox> codeExecuteSandBoxes) {
+        for (ICodeExecuteSandBox codeExecuteSandBox : codeExecuteSandBoxes) {
+            codeSanBoxMap.put(codeExecuteSandBox.getType().name(), codeExecuteSandBox);
+        }
+    }
+
+    public void registerCodeExecuteSandBox(ICodeExecuteSandBox codeExecuteSandBox) {
+        codeSanBoxMap.put(codeExecuteSandBox.getType().name(), codeExecuteSandBox);
+    }
+
+    public DelegateCodeExecutorSandbox() {
+
     }
 
     @Override
     public CodeRunResult<List<String>> execute(String code, List<String> input) {
-        log.info("CodeExecuteInfo: code: {}, input: {}", code, input);
+        ICodeExecuteSandBox codeExecuteSandBox = codeSanBoxMap.get(codeSandboxType);
         CodeRunResult<List<String>> result = codeExecuteSandBox.execute(code, input);
-        log.info("CodeExecuteResult: {}", result);
+        log.info("CodeExecutorSandboxType: {}, Code: {}, Input: {}, Result: {}", codeSandboxType, code, input, result);
         return result;
+    }
+
+    @Override
+    public TYPE getType() {
+        return TYPE.DELEGATE;
     }
 }

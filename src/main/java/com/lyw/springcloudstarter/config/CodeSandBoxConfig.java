@@ -3,9 +3,7 @@ package com.lyw.springcloudstarter.config;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
-import com.lyw.springcloudstarter.judge.codesandbox.DelegateCodeExecutorSandbox;
-import com.lyw.springcloudstarter.judge.codesandbox.ICodeExecuteSandBox;
-import com.lyw.springcloudstarter.judge.codesandbox.JavaNativeCodeExecutorSandBox;
+import com.lyw.springcloudstarter.judge.codesandbox.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -32,15 +30,14 @@ public class CodeSandBoxConfig {
 
 
     @Bean
-    public ICodeExecuteSandBox codeExecuteSandBox() {
-        return new JavaNativeCodeExecutorSandBox();
-
-    }
-
-    @Bean
     @Primary
-    public ICodeExecuteSandBox codeExecuteSandBoxRegistry(ICodeExecuteSandBox codeExecuteSandBox) {
-        return new DelegateCodeExecutorSandbox(codeExecuteSandBox);
+    public ICodeExecuteSandBox delegateCodeExecutorSandbox() {
+        DelegateCodeExecutorSandbox delegateCodeExecutorSandbox = new DelegateCodeExecutorSandbox();
+        delegateCodeExecutorSandbox.registerCodeExecuteSandBox(new JavaDockerCodeExecutorSandBox());
+        delegateCodeExecutorSandbox.registerCodeExecuteSandBox(new JavaNativeCodeExecutorSandBox());
+        return delegateCodeExecutorSandbox;
     }
+
+
 
 }

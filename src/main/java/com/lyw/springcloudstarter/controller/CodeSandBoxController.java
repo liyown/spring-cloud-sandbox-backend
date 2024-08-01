@@ -7,6 +7,7 @@ import com.lyw.springcloudstarter.domain.dto.codesandbox.CodeRunResult;
 import com.lyw.springcloudstarter.judge.codesandbox.ICodeExecuteSandBox;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,7 @@ import java.util.List;
 @Slf4j
 public class CodeSandBoxController {
 
-    @Resource
+    @Autowired
     private ICodeExecuteSandBox codeExecuteSandBox;
 
     @PostMapping("/execute")

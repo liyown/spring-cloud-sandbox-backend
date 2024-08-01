@@ -27,8 +27,9 @@ import java.util.Objects;
 public class JavaCompilerUtils {
 
     static String templateDir = "templates";
+    private static final String jvmLimitCommand = "-Xmx24m -Xss256k";
 
-    private static final String SECURITY_MANAGER_PATH = "D:\\github\\java\\spring-cloud-sandbox\\src\\main\\resources\\security-manager";
+    private static final String SECURITY_MANAGER_PATH = Objects.requireNonNull(JavaCompilerUtils.class.getClassLoader().getResource("")).getPath() + "security-manager";
     private static final String SECURITY_MANAGER_CLASS = "MySecurityManager";
 
     private static final String ENCODE_COMMAND = "-encoding UTF-8";
@@ -64,10 +65,11 @@ public class JavaCompilerUtils {
         FileUtil.del(classFilePath);
         if (result == 0) {
             log.info("编译成功");
-            return new CompilerResult<>(true, String.format("java -Dfile.encoding=UTF-8 -cp %s;%s -Djava.security.manager=%s Main ", path, SECURITY_MANAGER_PATH, SECURITY_MANAGER_CLASS), null, path);
+            return new CompilerResult<>(true, String.format("java -Dfile.encoding=UTF-8 %s -cp %s:%s -Djava.security.manager=%s Main ",jvmLimitCommand, path, SECURITY_MANAGER_PATH, SECURITY_MANAGER_CLASS), null, path);
 
         } else {
             log.error("编译失败");
+            FileUtil.del(classFilePath);
             String failMessage = errorByteArrayOutputStream.toString() + " " + infoByteArrayOutputStream.toString();
             return new CompilerResult<>(false, null, failMessage, path);
         }
@@ -119,7 +121,7 @@ public class JavaCompilerUtils {
             FileUtil.mkdir(JavaCompilerUtils.class.getClassLoader().getResource("").getPath() + File.separator + templateDir);
         }
 
-        String path = Objects.requireNonNull(JavaCompilerUtils.class.getClassLoader().getResource(templateDir)).getPath();
+        String path = JavaCompilerUtils.class.getClassLoader().getResource("").getPath() + File.separator + templateDir;
         String subPath = String.valueOf(System.currentTimeMillis());
         File mkdir = FileUtil.mkdir(path + File.separator + subPath);
         String filePath = mkdir.getPath() + File.separator + "Main.java";

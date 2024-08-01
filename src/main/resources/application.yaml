@@ -6,7 +6,9 @@ spring:
   application:
     name: spring-cloud-starter
   profiles:
-    active: dev
+    active:
+      - dev
+      - docker
   #  nacos 是否导入外部配置文件
   config:
     import:
@@ -108,6 +110,8 @@ logging:
   file:
     path: "logs/logging-face"
 
+code-sandbox:
+  type: JAVA_DOCKER
 
 knife4j:
   enable: true

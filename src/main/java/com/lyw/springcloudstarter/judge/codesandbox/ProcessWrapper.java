@@ -1,6 +1,7 @@
 package com.lyw.springcloudstarter.judge.codesandbox;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.log.Log;
 import com.lyw.springcloudstarter.constant.QuestionSubmitConstant;
 import com.lyw.springcloudstarter.domain.dto.codesandbox.CodeRunResult;
 import com.lyw.springcloudstarter.utils.JavaCompilerUtils;
@@ -22,10 +23,7 @@ public class ProcessWrapper {
 
     private final StopWatch stopWatch = new StopWatch();
 
-
-
-    // JVM限制 最大内存和栈大小
-    String jvmLimitCommand = "-Xmx24m -Xss256k";
+    private final Long TimeLimit = 5000L;
 
     public CodeRunResult<List<String>> runCode(String code, List<String> input) {
 
@@ -83,7 +81,6 @@ public class ProcessWrapper {
         // 清除最后一个换行符和空格
         if (!stringBuilder.isEmpty()) {
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
         return stringBuilder.toString();
 
@@ -93,8 +90,7 @@ public class ProcessWrapper {
     private CodeRunResult<String> InteractRunCode(String command, String input) {
         CodeRunResult<String> runResult = new CodeRunResult<>();
         try {
-            String runCommand = command + " " + input + " " + jvmLimitCommand;
-            log.info("run command: {}", runCommand);
+            String runCommand = command + " " + input + " ";
             stopWatch.start();
 
             Process process = Runtime.getRuntime().exec(runCommand);
@@ -102,7 +98,7 @@ public class ProcessWrapper {
             InputStream inputStream = process.getInputStream();
             new Thread(() -> {
                 try {
-                    Thread.sleep(5000L);
+                    Thread.sleep(TimeLimit);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

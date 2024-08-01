@@ -1,6 +1,7 @@
 package com.lyw.springcloudstarter.judge.codesandbox;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,6 +17,12 @@ public class CodeExecutorSanBoxRegistry {
 
     public void register(String type, ICodeExecuteSandBox codeExecuteSandBox) {
         codeSanBoxMap.put(type, codeExecuteSandBox);
+    }
+
+    public CodeExecutorSanBoxRegistry(List<ICodeExecuteSandBox> codeExecuteSandBoxes) {
+        for (ICodeExecuteSandBox codeExecuteSandBox : codeExecuteSandBoxes) {
+            codeSanBoxMap.put(codeExecuteSandBox.getType().name(), codeExecuteSandBox);
+        }
     }
 
     public ICodeExecuteSandBox get(String type) {

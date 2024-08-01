@@ -14,14 +14,8 @@ import java.util.List;
  */
 public class JavaNativeCodeExecutorSandBox implements ICodeExecuteSandBox {
 
-    private final List<String> blackJavaClass = List.of("File", "ProcessBuilder", "Runtime", "Thread", "ThreadGroup", "ClassLoader", "SecurityManager", "SecurityManager");
 
-    public static void main(String[] args) {
-        JavaNativeCodeExecutorSandBox javaNativeCodeExecutorSandBox = new JavaNativeCodeExecutorSandBox();
-        String s = FileUtil.readString("D:\\github\\java\\spring-cloud-sandbox\\src\\main\\java\\com\\lyw\\springcloudstarter\\judge\\test\\Main.java", Charset.defaultCharset());
-        CodeRunResult<List<String>> result = javaNativeCodeExecutorSandBox.execute(s, List.of("1"));
-        System.out.println(result);
-    }
+    private final List<String> blackJavaClass = List.of("File", "ProcessBuilder", "Runtime", "Thread", "ThreadGroup", "ClassLoader", "SecurityManager", "SecurityManager");
 
     @Override
     public CodeRunResult<List<String>> execute(String code, List<String> input) {
@@ -34,5 +28,10 @@ public class JavaNativeCodeExecutorSandBox implements ICodeExecuteSandBox {
         // 2. 执行代码
         ProcessWrapper processWrapper = new ProcessWrapper();
         return processWrapper.runCode(code, input);
+    }
+
+    @Override
+    public TYPE getType() {
+        return TYPE.JAVA_NATIVE;
     }
 }

@@ -7,11 +7,6 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-
-
 @SpringBootApplication
 @MapperScan("com.lyw.springcloudstarter.mapper")
 @EnableFeignClients(basePackages = "com.lyw.springcloudstarter.openfeign.client",defaultConfiguration = FeignLogConfig.class)

@@ -13,4 +13,21 @@ import java.util.List;
 public interface ICodeExecuteSandBox {
 
     CodeRunResult<List<String>> execute(String code, List<String> input);
+
+    TYPE getType();
+
+
+    enum TYPE {
+        JAVA_NATIVE("java_native"),
+        JAVA_DOCKER("java_docker"),
+
+
+        DELEGATE("delegate");
+        private String name;
+
+        TYPE(String typeName) {
+            this.name = typeName;
+        }
+    }
 }
+
